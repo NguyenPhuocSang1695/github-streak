@@ -17,6 +17,7 @@ Tiện ích nhỏ để tùy biến/hiển thị nội dung liên quan đến Gi
 ## Chỉnh sửa
 
 - Sửa logic trong `content.js`.
+- Sửa Username và Github Token để sử dụng
 - Cập nhật quyền hoặc metadata trong `manifest.json` nếu cần.
 - Reload extension trong trang `chrome://extensions/` sau khi thay đổi.
 
