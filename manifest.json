@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Streak",
+  "version": "1.0",
+  "description": "Show streak on GitHub header",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
