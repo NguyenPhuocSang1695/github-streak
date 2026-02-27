@@ -1,4 +1,4 @@
-# github-streak-public
+# Github streak
 
 Tiện ích nhỏ để tùy biến/hiển thị nội dung liên quan đến GitHub streak thông qua `content.js` và cấu hình trong `manifest.json`.
 
