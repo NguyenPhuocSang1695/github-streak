@@ -2,6 +2,10 @@
 
 Tiện ích nhỏ để tùy biến/hiển thị nội dung liên quan đến GitHub streak thông qua `content.js` và cấu hình trong `manifest.json`.
 
+## Demo
+
+![Demo github-streak](demo.PNG)
+
 ## Cấu trúc hiện tại
 
 - `manifest.json`: Cấu hình extension (Chrome/Chromium).
