@@ -4,7 +4,7 @@ Tiện ích nhỏ để tùy biến/hiển thị nội dung liên quan đến Gi
 
 ## Demo
 
-![Demo github-streak](demo.PNG)
+![Demo github-streak](demo.jpg)
 
 ## Cấu trúc hiện tại
 
