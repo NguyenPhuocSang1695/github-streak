@@ -1,5 +1,5 @@
 const USERNAME = "GITHUB_USERNAME"; // username của trên GitHub
-const GITHUB_TOKEN = "PASTE_TOKEN_HERE"; // token
+const GITHUB_TOKEN = "PASTE__YOUR_GITHUB_TOKEN_HERE"; // token
 
 // 🔥 gọi GraphQL
 async function fetchContributions() {
