@@ -64,9 +64,11 @@ async function getStreakData() {
   let current = new Date();
 
   const today = getDateStr(current);
+  const todayCount = map.get(today) || 0;
+  const hasPushedToday = todayCount > 0;
 
   // ❗ nếu hôm nay không có commit → reset
-  if ((map.get(today) || 0) === 0) {
+  if (!hasPushedToday) {
     console.log("❌ No contribution today → streak = 0");
     const last7 = [];
     for (let i = 6; i >= 0; i--) {
@@ -76,7 +78,7 @@ async function getStreakData() {
       const count = map.get(dateStr) || 0;
       last7.push({ date: dateStr, count, level: getContributionLevel(count) });
     }
-    return { streak: 0, last7 };
+    return { streak: 0, last7, hasPushedToday, todayCount };
   }
 
   // 👉 tính liên tiếp
@@ -101,7 +103,7 @@ async function getStreakData() {
     last7.push({ date: dateStr, count, level: getContributionLevel(count) });
   }
 
-  return { streak, last7 };
+  return { streak, last7, hasPushedToday, todayCount };
 }
 
 // 🎨 render UI
@@ -109,8 +111,11 @@ function render(streakData) {
   const header = document.querySelector("header");
   if (!header) return;
 
-  const { streak, last7 } = streakData;
+  const { streak, last7, hasPushedToday, todayCount } = streakData;
   const titleText = `${streak} Day${streak === 1 ? "" : "s"} Active`;
+  const pushStatusText = hasPushedToday
+    ? `✅ Pushed today (${todayCount})`
+    : "⚠️ No push today";
 
   const levelColors = [
     "#1b1f2a",
@@ -124,10 +129,17 @@ function render(streakData) {
 
   if (el) {
     const title = el.querySelector("#streak-main-title");
+    const pushStatus = el.querySelector("#streak-push-status");
     const dayLabel = el.querySelector("#streak-day-label");
     const days = el.querySelector("#streak-days");
 
     if (title) title.textContent = titleText;
+    if (pushStatus) {
+      pushStatus.textContent = pushStatusText;
+      pushStatus.style.color = hasPushedToday
+        ? "rgba(167, 243, 186, 0.95)"
+        : "rgba(253, 224, 71, 0.95)";
+    }
     if (dayLabel) dayLabel.textContent = `Day ${streak}`;
 
     if (days) {
@@ -157,6 +169,7 @@ function render(streakData) {
     </div>
     <div id="streak-content">
       <div id="streak-main-title">${titleText}</div>
+      <div id="streak-push-status">${pushStatusText}</div>
       <div id="streak-row">
         <span id="streak-last7">Last 7 days</span>
         <div id="streak-days"></div>
@@ -183,6 +196,7 @@ function render(streakData) {
   const icon = el.querySelector("#streak-icon");
   const content = el.querySelector("#streak-content");
   const mainTitle = el.querySelector("#streak-main-title");
+  const pushStatus = el.querySelector("#streak-push-status");
   const row = el.querySelector("#streak-row");
   const last7Label = el.querySelector("#streak-last7");
   const daysWrap = el.querySelector("#streak-days");
@@ -228,6 +242,15 @@ function render(streakData) {
     mainTitle.style.lineHeight = "1";
     mainTitle.style.color = "#f6c59d";
     mainTitle.style.letterSpacing = "-0.4px";
+  }
+
+  if (pushStatus) {
+    pushStatus.style.fontSize = "14px";
+    pushStatus.style.fontWeight = "600";
+    pushStatus.style.marginTop = "2px";
+    pushStatus.style.color = hasPushedToday
+      ? "rgba(167, 243, 186, 0.95)"
+      : "rgba(253, 224, 71, 0.95)";
   }
 
   if (row) {
