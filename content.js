@@ -67,18 +67,10 @@ async function getStreakData() {
   const todayCount = map.get(today) || 0;
   const hasPushedToday = todayCount > 0;
 
-  // ❗ nếu hôm nay không có commit → reset
+  // ❗ nếu hôm nay không có commit → check từ hôm qua
   if (!hasPushedToday) {
-    console.log("❌ No contribution today → streak = 0");
-    const last7 = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = getDateStr(date);
-      const count = map.get(dateStr) || 0;
-      last7.push({ date: dateStr, count, level: getContributionLevel(count) });
-    }
-    return { streak: 0, last7, hasPushedToday, todayCount };
+    console.log("⚠️ No contribution today → checking from yesterday");
+    current.setDate(current.getDate() - 1);
   }
 
   // 👉 tính liên tiếp
@@ -97,7 +89,9 @@ async function getStreakData() {
   const last7 = [];
   for (let i = 6; i >= 0; i--) {
     const date = new Date();
-    date.setDate(date.getDate() - i);
+    // Reset date vì current đã bị thay đổi trong while loop
+    const now = new Date();
+    date.setDate(now.getDate() - i);
     const dateStr = getDateStr(date);
     const count = map.get(dateStr) || 0;
     last7.push({ date: dateStr, count, level: getContributionLevel(count) });
@@ -213,7 +207,11 @@ function render(streakData) {
     iconGlow.style.position = "absolute";
     iconGlow.style.inset = "6px";
     iconGlow.style.borderRadius = "50%";
-    iconGlow.style.background = "radial-gradient(circle at 30% 30%, rgba(255,194,102,0.95) 0%, rgba(255,129,76,0.62) 45%, rgba(255,77,109,0.28) 75%, rgba(255,77,109,0) 100%)";
+    if (hasPushedToday) {
+        iconGlow.style.background = "radial-gradient(circle at 30% 30%, rgba(255,194,102,0.95) 0%, rgba(255,129,76,0.62) 45%, rgba(255,77,109,0.28) 75%, rgba(255,77,109,0) 100%)";
+    } else {
+        iconGlow.style.background = "radial-gradient(circle at 30% 30%, rgba(200,200,200,0.95) 0%, rgba(150,150,150,0.62) 45%, rgba(100,100,100,0.28) 75%, rgba(100,100,100,0) 100%)";
+    }
     iconGlow.style.filter = "blur(3px)";
   }
 
@@ -226,7 +224,13 @@ function render(streakData) {
     icon.style.height = "100%";
     icon.style.fontSize = "64px";
     icon.style.lineHeight = "1";
-    icon.style.filter = "drop-shadow(0 2px 8px rgba(255, 120, 62, 0.6))";
+    if (hasPushedToday) {
+        icon.style.filter = "drop-shadow(0 2px 8px rgba(255, 120, 62, 0.6))";
+        icon.style.webkitFilter = "drop-shadow(0 2px 8px rgba(255, 120, 62, 0.6))";
+    } else {
+        icon.style.filter = "grayscale(100%) drop-shadow(0 2px 8px rgba(100, 100, 100, 0.6))";
+        icon.style.webkitFilter = "grayscale(100%) drop-shadow(0 2px 8px rgba(100, 100, 100, 0.6))";
+    }
   }
 
   if (content) {
